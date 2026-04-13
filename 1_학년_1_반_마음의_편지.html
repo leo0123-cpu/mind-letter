@@ -502,6 +502,16 @@
       font-weight: 800;
     }
 
+    .delete-btn {
+      background: #fff1f3;
+      color: #ce4257;
+      border: 1.5px solid #f3b3bc;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .admin-label {
       font-size: 12px;
       font-weight: 800;
@@ -790,6 +800,7 @@
       onSnapshot,
       doc,
       updateDoc,
+      deleteDoc,
       serverTimestamp
     } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
@@ -1043,6 +1054,7 @@
               <span class="admin-label">관리자 상태 변경</span>
               <button class="admin-btn" onclick="window.updateStatus('${item.id}', '확인 중')">확인됨</button>
               <button class="admin-btn" onclick="window.updateStatus('${item.id}', '해결됨')">해결됨</button>
+              <button class="delete-btn" onclick="window.deleteLetter('${item.id}')">삭제</button>
             </div>
           </div>
         </div>
@@ -1133,6 +1145,20 @@
       } catch (error) {
         console.error(error);
         alert('상태 변경에 실패했습니다.');
+      }
+    }
+
+    async function deleteLetter(id) {
+      if (currentRole !== 'admin' || !db) return;
+
+      const confirmed = confirm('이 민원을 삭제하시겠습니까? 삭제 후에는 되돌릴 수 없습니다.');
+      if (!confirmed) return;
+
+      try {
+        await deleteDoc(doc(db, LETTERS_COLLECTION, id));
+      } catch (error) {
+        console.error(error);
+        alert('민원 삭제에 실패했습니다.');
       }
     }
 
@@ -1248,6 +1274,7 @@
     filterStatus.addEventListener('change', renderList);
 
     window.updateStatus = updateStatus;
+    window.deleteLetter = deleteLetter;
 
     studentId = getStudentId();
     clearForm();
