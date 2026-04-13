@@ -1,3 +1,1288 @@
+학생 기능 수정 및 최종 반영학생 기능 수정 및 최종 반영<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1학년 1반 마음의 편지</title>
+  <style>
+    :root {
+      --card: rgba(255,255,255,0.82);
+      --line: #d7ddff;
+      --primary: #5a46f2;
+      --primary-2: #7a68ff;
+      --text: #2e2f66;
+      --sub: #7a80b6;
+      --good: #2d9c6c;
+      --warn: #f2994a;
+      --bad: #e25b6a;
+      --urgent-bg: #fff1f3;
+      --urgent-line: #f3b3bc;
+      --high-bg: #fff8ed;
+      --high-line: #f4cf9a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+      background: linear-gradient(180deg, #eef2ff 0%, #f7f8ff 100%);
+      color: var(--text);
+    }
+
+    .hidden { display: none !important; }
+
+    .screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .role-card, .password-card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1.8px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 12px 28px rgba(95, 110, 190, 0.14);
+      padding: 34px 28px;
+      text-align: center;
+    }
+
+    .role-card h1, .password-card h1 {
+      margin: 0 0 10px;
+      font-size: 38px;
+      font-weight: 800;
+      color: #3936a3;
+    }
+
+    .role-card p, .password-card p {
+      margin: 0 0 24px;
+      color: var(--sub);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .role-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .role-btn {
+      border: none;
+      border-radius: 22px;
+      padding: 24px 18px;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 10px 20px rgba(90, 70, 242, 0.2);
+    }
+
+    .role-btn.secondary {
+      background: #eef1ff;
+      color: #5f61b8;
+      border: 1.5px solid #d5dbff;
+      box-shadow: none;
+    }
+
+    .password-input {
+      text-align: center;
+      letter-spacing: 6px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .error-text {
+      color: #d24a5b;
+      font-size: 14px;
+      font-weight: 700;
+      min-height: 20px;
+      margin-top: 10px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eef1ff;
+      color: #5f61b8;
+      border: 1.5px solid #d5dbff;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .small-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #eef1ff;
+      color: #5f61b8;
+      border: 1.5px solid #d5dbff;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 44px;
+      font-weight: 800;
+      color: #3936a3;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--sub);
+      font-size: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .student-layout {
+      display: block;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1.8px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 10px 24px rgba(95, 110, 190, 0.12);
+      overflow: hidden;
+    }
+
+    .card-head {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      padding: 18px 22px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .card-body {
+      padding: 22px;
+    }
+
+    .notice {
+      background: #f3f5ff;
+      border: 1.5px dashed #c9d0ff;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: var(--sub);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .privacy-box {
+      background: #eef4ff;
+      border: 1.5px solid #cfdbff;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #6170b4;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .setup-box {
+      background: #fff8ed;
+      border: 1.5px solid #f4cf9a;
+      color: #8b5e16;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      white-space: pre-wrap;
+    }
+
+    .loading-box {
+      background: #eef4ff;
+      border: 1.5px solid #cfdbff;
+      color: #4a6fba;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #666ccc;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1.8px solid #d7ddff;
+      background: white;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(122, 104, 255, 0.12);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .row { margin-bottom: 16px; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      border: 1.6px solid #cfd5ff;
+      background: #f7f8ff;
+      color: #5f61b8;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .chip.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      border-color: transparent;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #f7f8ff;
+      border: 1.5px solid #d8ddff;
+      border-radius: 14px;
+      color: #555fa8;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: #6f58ff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 8px 18px rgba(90, 70, 242, 0.22);
+    }
+
+    .secondary-btn {
+      background: #eef1ff;
+      color: #5f61b8;
+      border: 1.5px solid #d5dbff;
+    }
+
+    .panel-stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat {
+      background: #f6f7ff;
+      border: 1.5px solid #dbe0ff;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .stat .k {
+      font-size: 13px;
+      color: var(--sub);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .stat .v {
+      font-size: 26px;
+      font-weight: 800;
+      color: #4442b0;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .letter-list {
+      display: grid;
+      gap: 12px;
+      max-height: 720px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .letter-item {
+      background: #f8f9ff;
+      border: 1.5px solid #dde2ff;
+      border-radius: 18px;
+      padding: 16px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .letter-item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(92, 102, 183, 0.1);
+    }
+
+    .letter-item.high {
+      background: var(--high-bg);
+      border-color: var(--high-line);
+    }
+
+    .letter-item.urgent {
+      background: var(--urgent-bg);
+      border-color: var(--urgent-line);
+      box-shadow: 0 8px 18px rgba(226, 91, 106, 0.12);
+    }
+
+    .letter-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .b-anon { background: #eef1ff; color: #5f61b8; }
+    .b-open { background: #edf8f1; color: var(--good); }
+    .b-check { background: #fff5e9; color: var(--warn); }
+    .b-done { background: #fdecef; color: var(--bad); }
+    .b-high { background: #fff1d9; color: #b87019; }
+    .b-urgent { background: #ffe1e6; color: #ce4257; }
+    .b-private { background: #e8f0ff; color: #4872c7; }
+
+    .title-sm {
+      font-size: 17px;
+      font-weight: 800;
+      color: #3f44aa;
+    }
+
+    .letter-content {
+      color: #4e568b;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .letter-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .admin-btn {
+      background: white;
+      color: #5c5fb1;
+      border: 1.5px solid #d7ddff;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .delete-btn {
+      background: #fff1f3;
+      color: #ce4257;
+      border: 1.5px solid #f3b3bc;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .admin-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #8a90bb;
+      margin-right: 4px;
+    }
+
+    .private-note {
+      margin-top: 10px;
+      background: #eef4ff;
+      color: #4a6fba;
+      border: 1px solid #cddcff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .student-complete {
+      margin-top: 18px;
+      background: #eef7f1;
+      color: #317a57;
+      border: 1.5px solid #cfe9d8;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .student-submitted-list {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .student-submitted-item {
+      background: #f8f9ff;
+      border: 1.5px solid #dde2ff;
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .student-submitted-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .student-submitted-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #3f44aa;
+    }
+
+    .student-submitted-meta {
+      font-size: 12px;
+      color: #8a90bb;
+      font-weight: 700;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--sub);
+      padding: 28px 12px;
+      font-size: 15px;
+    }
+
+    .footer-tip {
+      margin-top: 10px;
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .layout, .role-buttons { grid-template-columns: 1fr; }
+      .hero h1, .role-card h1, .password-card h1 { font-size: 34px; }
+      .grid2, .stat-grid { grid-template-columns: 1fr; }
+      .letter-footer { align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen" id="roleScreen">
+    <div class="role-card">
+      <h1>1학년 1반 마음의 편지</h1>
+      <p>처음 사용할 역할을 선택해 주세요. 학생은 바로 들어갈 수 있고, 관리자는 비밀번호를 입력해야 합니다.</p>
+      <div class="role-buttons">
+        <button class="role-btn" id="studentEntryBtn">학생으로 들어가기</button>
+        <button class="role-btn secondary" id="adminEntryBtn">관리자로 들어가기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="adminPasswordScreen">
+    <div class="password-card">
+      <h1>관리자 비밀번호</h1>
+      <p>관리자 화면으로 들어가려면 7자리 비밀번호를 입력해 주세요.</p>
+      <input id="adminPasswordInput" class="password-input" type="password" maxlength="7" inputmode="numeric" placeholder="••••" />
+      <div class="actions" style="justify-content:center; margin-top:18px;">
+        <button class="primary-btn" id="adminLoginBtn">관리자 입장</button>
+        <button class="secondary-btn" id="backToRoleBtn">뒤로가기</button>
+      </div>
+      <div class="error-text" id="passwordError"></div>
+    </div>
+  </div>
+
+  <div class="hidden" id="appScreen">
+    <div class="wrap">
+      <div class="top-bar">
+        <div class="role-badge" id="currentRoleBadge">학생 화면</div>
+        <div class="top-actions">
+          <button class="small-btn" id="refreshBtn">새로고침</button>
+          <button class="small-btn" id="changeRoleBtn">역할 다시 선택</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1>1학년 1반 마음의 편지</h1>
+        <p id="heroDesc">학급 생활 속 불편사항, 고민, 건의사항을 차분하게 남길 수 있는 기록 시스템</p>
+      </div>
+
+      <div class="setup-box hidden" id="firebaseSetupBox"></div>
+      <div class="loading-box hidden" id="loadingBox">서버와 연결 중입니다...</div>
+
+      <div class="layout hidden" id="adminLayout">
+        <div class="card">
+          <div class="card-head">관리자 확인용 편지 목록</div>
+          <div class="card-body">
+            <div class="notice">
+              학생이 제출한 편지는 관리자 화면에서만 확인할 수 있습니다. 접수된 의견을 확인한 뒤, 확인 중 또는 해결됨 상태로 변경해 관리할 수 있습니다.
+            </div>
+
+            <div class="filter-bar">
+              <select id="filterCategory">
+                <option value="전체">전체 유형</option>
+                <option value="교실 분위기">교실 분위기</option>
+                <option value="친구 관계">친구 관계</option>
+                <option value="수업 환경">수업 환경</option>
+                <option value="시설 문제">시설 문제</option>
+                <option value="건의 사항">건의 사항</option>
+                <option value="기타">기타</option>
+              </select>
+              <select id="filterStatus">
+                <option value="전체">전체 상태</option>
+                <option value="접수됨">접수됨</option>
+                <option value="확인 중">확인 중</option>
+                <option value="해결됨">해결됨</option>
+              </select>
+            </div>
+            <div class="letter-list" id="letterList"></div>
+          </div>
+        </div>
+
+        <div class="panel-stack">
+          <div class="card">
+            <div class="card-head">간단 통계</div>
+            <div class="card-body">
+              <div class="stat-grid">
+                <div class="stat">
+                  <div class="k">전체 편지 수</div>
+                  <div class="v" id="totalCount">0</div>
+                </div>
+                <div class="stat">
+                  <div class="k">오늘 작성 수</div>
+                  <div class="v" id="todayCount">0</div>
+                </div>
+                <div class="stat">
+                  <div class="k">가장 많은 유형</div>
+                  <div class="v" id="topCategory">-</div>
+                </div>
+                <div class="stat">
+                  <div class="k">긴급 편지 수</div>
+                  <div class="v" id="urgentCount">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="student-layout hidden" id="studentLayout">
+        <div class="card">
+          <div class="card-head">마음의 편지 작성</div>
+          <div class="card-body">
+            <div class="notice">
+              익명 또는 실명으로 작성할 수 있습니다. 제출된 내용은 관리자 화면으로만 전달되며, 학생 화면에서는 다른 학생의 편지를 볼 수 없습니다.
+            </div>
+
+            <div class="privacy-box">
+              실명으로 작성하더라도 선택한 경우에는 이름이 공개 목록에 표시되지 않고 관리자만 확인할 수 있도록 저장됩니다.
+            </div>
+
+            <div class="grid2 row">
+              <div>
+                <label for="writerType">작성 방식</label>
+                <select id="writerType">
+                  <option value="익명">익명</option>
+                  <option value="실명">실명</option>
+                </select>
+              </div>
+              <div>
+                <label for="writerName">이름 또는 별칭</label>
+                <input id="writerName" type="text" placeholder="익명이면 비워도 됩니다" />
+              </div>
+            </div>
+
+            <div class="row">
+              <label>불편 유형</label>
+              <div class="chips" id="categoryChips">
+                <div class="chip active" data-value="교실 분위기">교실 분위기</div>
+                <div class="chip" data-value="친구 관계">친구 관계</div>
+                <div class="chip" data-value="수업 환경">수업 환경</div>
+                <div class="chip" data-value="시설 문제">시설 문제</div>
+                <div class="chip" data-value="건의 사항">건의 사항</div>
+                <div class="chip" data-value="기타">기타</div>
+              </div>
+            </div>
+
+            <div class="grid2 row">
+              <div>
+                <label for="importance">중요도</label>
+                <select id="importance">
+                  <option value="보통">보통</option>
+                  <option value="높음">높음</option>
+                  <option value="긴급">긴급</option>
+                </select>
+              </div>
+              <div>
+                <label for="status">처리 상태</label>
+                <input id="status" type="text" value="제출 시 자동으로 접수됨 처리" disabled />
+              </div>
+            </div>
+
+            <div class="row">
+              <label for="subject">제목</label>
+              <input id="subject" type="text" placeholder="예: 쉬는 시간에 너무 시끄러워요" />
+            </div>
+
+            <div class="row">
+              <label for="content">내용</label>
+              <textarea id="content" placeholder="상황을 자세히 적어 주세요. 언제, 어떤 점이 불편했는지, 어떻게 개선되면 좋을지 함께 적으면 더 좋아요."></textarea>
+            </div>
+
+            <div class="row">
+              <label class="checkbox-row" for="privateOnly">
+                <input id="privateOnly" type="checkbox" />
+                <span>이름을 관리자만 볼 수 있도록 비공개로 저장하기</span>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button class="primary-btn" id="saveBtn">제출하기</button>
+              <button class="secondary-btn" id="sampleBtn">예시 입력</button>
+              <button class="secondary-btn" id="resetBtn">작성 내용 지우기</button>
+            </div>
+
+            <div class="student-complete hidden" id="studentCompleteBox">
+              편지가 관리자 화면으로 제출되었습니다. 관리자는 접수된 내용을 확인한 뒤 상태를 변경할 수 있습니다.
+            </div>
+
+            <div class="student-submitted-list" id="studentSubmittedList"></div>
+
+            <div class="footer-tip">
+              이 프로젝트는 학교생활 속 문제를 기록하고, 학생 의견을 정리해 학급 운영에 도움을 줄 수 있도록 만든 실용형 웹앱입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      onSnapshot,
+      doc,
+      updateDoc,
+      deleteDoc,
+      serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
+    const ADMIN_PASSWORD = '0713947';
+    const STUDENT_ID_KEY = 'mind_letter_student_id';
+    const LETTERS_COLLECTION = 'mind_letters_grade1_class1';
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyBH7qHwp2ZYVh0lbMyd6837WHt9ihme-_w",
+    authDomain: "mind-letter-class1.firebaseapp.com",
+    projectId: "mind-letter-class1",
+    storageBucket: "mind-letter-class1.firebasestorage.app",
+    messagingSenderId: "247364761042",
+    appId: "1:247364761042:web:b8227355fde930c21c840b",
+    measurementId: "G-44E10HZSWR"
+  };
+
+    let selectedCategory = '교실 분위기';
+    let currentRole = null;
+    let allLetters = [];
+    let studentId = null;
+    let db = null;
+    let unsubscribeLetters = null;
+
+    const roleScreen = document.getElementById('roleScreen');
+    const adminPasswordScreen = document.getElementById('adminPasswordScreen');
+    const appScreen = document.getElementById('appScreen');
+    const studentLayout = document.getElementById('studentLayout');
+    const adminLayout = document.getElementById('adminLayout');
+    const currentRoleBadge = document.getElementById('currentRoleBadge');
+    const heroDesc = document.getElementById('heroDesc');
+    const passwordError = document.getElementById('passwordError');
+    const adminPasswordInput = document.getElementById('adminPasswordInput');
+    const studentCompleteBox = document.getElementById('studentCompleteBox');
+    const studentSubmittedList = document.getElementById('studentSubmittedList');
+    const firebaseSetupBox = document.getElementById('firebaseSetupBox');
+    const loadingBox = document.getElementById('loadingBox');
+
+    const studentEntryBtn = document.getElementById('studentEntryBtn');
+    const adminEntryBtn = document.getElementById('adminEntryBtn');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const backToRoleBtn = document.getElementById('backToRoleBtn');
+    const changeRoleBtn = document.getElementById('changeRoleBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    const chips = document.querySelectorAll('.chip');
+    const writerType = document.getElementById('writerType');
+    const writerName = document.getElementById('writerName');
+    const importance = document.getElementById('importance');
+    const statusEl = document.getElementById('status');
+    const subject = document.getElementById('subject');
+    const content = document.getElementById('content');
+    const privateOnly = document.getElementById('privateOnly');
+    const saveBtn = document.getElementById('saveBtn');
+    const sampleBtn = document.getElementById('sampleBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const filterCategory = document.getElementById('filterCategory');
+    const filterStatus = document.getElementById('filterStatus');
+    const letterList = document.getElementById('letterList');
+
+    const totalCount = document.getElementById('totalCount');
+    const todayCount = document.getElementById('todayCount');
+    const topCategory = document.getElementById('topCategory');
+    const urgentCount = document.getElementById('urgentCount');
+
+    function hasFirebaseConfig() {
+      return !Object.values(firebaseConfig).some((value) => String(value).startsWith('PASTE_YOUR_'));
+    }
+
+    function setLoading(isLoading, message = '서버와 연결 중입니다...') {
+      loadingBox.textContent = message;
+      loadingBox.classList.toggle('hidden', !isLoading);
+    }
+
+    function showSetupMessage(message) {
+      firebaseSetupBox.textContent = message;
+      firebaseSetupBox.classList.remove('hidden');
+    }
+
+    function hideSetupMessage() {
+      firebaseSetupBox.textContent = '';
+      firebaseSetupBox.classList.add('hidden');
+    }
+
+    function getStudentId() {
+      let savedId = localStorage.getItem(STUDENT_ID_KEY);
+      if (!savedId) {
+        savedId = `student_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem(STUDENT_ID_KEY, savedId);
+      }
+      return savedId;
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function getTodayKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function formatTime(value) {
+      let d = null;
+      if (!value) return '-';
+      if (value?.toDate) d = value.toDate();
+      else d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '-';
+      return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function statusClass(status) {
+      if (status === '접수됨') return 'b-open';
+      if (status === '확인 중') return 'b-check';
+      return 'b-done';
+    }
+
+    function importanceClass(level) {
+      if (level === '긴급') return 'urgent';
+      if (level === '높음') return 'high';
+      return '';
+    }
+
+    function importanceBadge(level) {
+      if (level === '긴급') return 'b-urgent';
+      if (level === '높음') return 'b-high';
+      return 'b-anon';
+    }
+
+    function displayWriter(item) {
+      if (currentRole === 'admin') {
+        if (item.writerType === '익명') return '익명';
+        return item.writerName ? `실명 · ${escapeHtml(item.writerName)}` : '실명';
+      }
+      if (item.writerType === '익명') return '익명';
+      if (item.privateOnly) return '실명 · 비공개';
+      return item.writerName ? `실명 · ${escapeHtml(item.writerName)}` : '실명';
+    }
+
+    function clearForm() {
+      writerType.value = '익명';
+      writerName.value = '';
+      importance.value = '보통';
+      statusEl.value = '제출 시 자동으로 접수됨 처리';
+      subject.value = '';
+      content.value = '';
+      privateOnly.checked = false;
+      writerName.placeholder = '익명이면 비워도 됩니다';
+      selectedCategory = '교실 분위기';
+      chips.forEach(c => c.classList.toggle('active', c.dataset.value === selectedCategory));
+    }
+
+    function validateForm() {
+      if (!subject.value.trim()) {
+        alert('제목을 입력해 주세요.');
+        subject.focus();
+        return false;
+      }
+      if (!content.value.trim()) {
+        alert('내용을 입력해 주세요.');
+        content.focus();
+        return false;
+      }
+      if (writerType.value === '실명' && !writerName.value.trim()) {
+        alert('실명 작성이면 이름 또는 별칭을 입력해 주세요.');
+        writerName.focus();
+        return false;
+      }
+      return true;
+    }
+
+    function renderStats(items) {
+      totalCount.textContent = items.length;
+      todayCount.textContent = items.filter(item => item.dateKey === getTodayKey(item.createdAt?.toDate ? item.createdAt.toDate() : new Date(item.createdAt))).length;
+      urgentCount.textContent = items.filter(item => item.importance === '긴급').length;
+
+      if (!items.length) {
+        topCategory.textContent = '-';
+        return;
+      }
+
+      const counts = {};
+      items.forEach(item => {
+        counts[item.category] = (counts[item.category] || 0) + 1;
+      });
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      topCategory.textContent = sorted[0][0];
+    }
+
+    function renderStudentSubmittedList() {
+      const submitted = allLetters.filter(item => item.submitterId === studentId);
+
+      if (!submitted.length) {
+        studentSubmittedList.innerHTML = '<div class="empty">내가 제출한 민원이 없습니다.</div>';
+        return;
+      }
+      studentSubmittedList.innerHTML = submitted.map(item => `
+        <div class="student-submitted-item ${importanceClass(item.importance)}">
+          <div class="student-submitted-top">
+            <div class="student-submitted-title">${escapeHtml(item.subject)}</div>
+            <span class="badge ${statusClass(item.status)}">${item.status}</span>
+          </div>
+          <div class="student-submitted-meta">${formatTime(item.createdAt)} · ${escapeHtml(item.category)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderList() {
+      const all = [...allLetters];
+      renderStats(all);
+
+      let filtered = [...all];
+      if (filterCategory.value !== '전체') {
+        filtered = filtered.filter(item => item.category === filterCategory.value);
+      }
+      if (filterStatus.value !== '전체') {
+        filtered = filtered.filter(item => item.status === filterStatus.value);
+      }
+
+      if (!filtered.length) {
+        letterList.innerHTML = '<div class="empty">아직 제출된 편지가 없습니다.</div>';
+        return;
+      }
+
+      letterList.innerHTML = filtered.map(item => `
+        <div class="letter-item ${importanceClass(item.importance)}">
+          <div class="letter-top">
+            <div>
+              <div class="title-sm">${escapeHtml(item.subject)}</div>
+              <div class="meta">
+                <span class="badge b-anon">${displayWriter(item)}</span>
+                <span class="badge ${statusClass(item.status)}">${item.status}</span>
+                <span class="badge b-anon">${escapeHtml(item.category)}</span>
+                <span class="badge ${importanceBadge(item.importance)}">중요도 ${escapeHtml(item.importance)}</span>
+                ${item.privateOnly ? '<span class="badge b-private">관리자 화면 실명 확인 가능</span>' : ''}
+              </div>
+            </div>
+            <div style="font-size:12px; color:#8a90bb; font-weight:700; white-space:nowrap;">${formatTime(item.createdAt)}</div>
+          </div>
+          <div class="letter-content">${escapeHtml(item.content)}</div>
+          ${item.privateOnly ? `<div class="private-note">관리자 화면에서는 작성자 이름을 확인할 수 있습니다${item.writerType === '실명' && item.writerName ? `: ${escapeHtml(item.writerName)}` : ''}.</div>` : ''}
+          <div class="letter-footer">
+            <div class="admin-actions">
+              <span class="admin-label">관리자 상태 변경</span>
+              <button class="admin-btn" onclick="window.updateStatus('${item.id}', '확인 중')">확인됨</button>
+              <button class="admin-btn" onclick="window.updateStatus('${item.id}', '해결됨')">해결됨</button>
+              <button class="delete-btn" onclick="window.deleteLetter('${item.id}')">삭제</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function initFirebase() {
+      if (!hasFirebaseConfig()) {
+        showSetupMessage('Firebase 설정 전입니다.\nscript 안의 firebaseConfig 값을 네 Firebase 프로젝트 값으로 바꾸면 다른 기기에서도 제출/확인이 가능합니다.');
+        return false;
+      }
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        hideSetupMessage();
+        startLettersListener();
+        return true;
+      } catch (error) {
+        console.error(error);
+        showSetupMessage('Firebase 초기화에 실패했습니다. firebaseConfig 값을 다시 확인해 주세요.');
+        return false;
+      }
+    }
+
+    function startLettersListener() {
+      if (!db) return;
+      if (unsubscribeLetters) unsubscribeLetters();
+
+      setLoading(true, '서버와 실시간 연결 중입니다...');
+      const q = query(collection(db, LETTERS_COLLECTION), orderBy('createdAt', 'desc'));
+      unsubscribeLetters = onSnapshot(q, (snapshot) => {
+        allLetters = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          ...docSnap.data()
+        }));
+
+        setLoading(false);
+        if (currentRole === 'admin') renderList();
+        if (currentRole === 'student') renderStudentSubmittedList();
+      }, (error) => {
+        console.error(error);
+        setLoading(false);
+        showSetupMessage('데이터를 불러오지 못했습니다. Firestore 보안 규칙과 프로젝트 설정을 확인해 주세요.');
+      });
+    }
+
+    async function submitLetter() {
+      if (!validateForm()) return;
+      if (!db) {
+        alert('Firebase 설정이 아직 완료되지 않았습니다. firebaseConfig 값을 먼저 입력해 주세요.');
+        return;
+      }
+
+      try {
+        setLoading(true, '편지를 서버에 제출하는 중입니다...');
+        await addDoc(collection(db, LETTERS_COLLECTION), {
+          submitterId: studentId,
+          writerType: writerType.value,
+          writerName: writerName.value.trim(),
+          privateOnly: writerType.value === '실명' ? privateOnly.checked : false,
+          category: selectedCategory,
+          importance: importance.value,
+          status: '접수됨',
+          subject: subject.value.trim(),
+          content: content.value.trim(),
+          createdAt: serverTimestamp(),
+          dateKey: getTodayKey()
+        });
+
+        clearForm();
+        studentCompleteBox.classList.remove('hidden');
+        setLoading(false);
+        alert('편지가 관리자 화면으로 제출되었습니다.');
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+        alert('제출에 실패했습니다. Firebase 설정과 인터넷 연결을 확인해 주세요.');
+      }
+    }
+
+    async function updateStatus(id, newStatus) {
+      if (currentRole !== 'admin' || !db) return;
+      try {
+        await updateDoc(doc(db, LETTERS_COLLECTION, id), {
+          status: newStatus
+        });
+      } catch (error) {
+        console.error(error);
+        alert('상태 변경에 실패했습니다.');
+      }
+    }
+
+    async function deleteLetter(id) {
+      if (currentRole !== 'admin' || !db) return;
+
+      const confirmed = confirm('이 민원을 삭제하시겠습니까? 삭제 후에는 되돌릴 수 없습니다.');
+      if (!confirmed) return;
+
+      try {
+        await deleteDoc(doc(db, LETTERS_COLLECTION, id));
+      } catch (error) {
+        console.error(error);
+        alert('민원 삭제에 실패했습니다.');
+      }
+    }
+
+    function tryAdminLogin() {
+      if (adminPasswordInput.value === ADMIN_PASSWORD) {
+        passwordError.textContent = '';
+        enterApp('admin');
+      } else {
+        passwordError.textContent = '비밀번호가 올바르지 않습니다.';
+        adminPasswordInput.focus();
+      }
+    }
+
+    function enterApp(role) {
+      if (!studentId) {
+        studentId = getStudentId();
+      }
+      currentRole = role;
+      roleScreen.classList.add('hidden');
+      adminPasswordScreen.classList.add('hidden');
+      appScreen.classList.remove('hidden');
+
+      if (role === 'student') {
+        studentLayout.classList.remove('hidden');
+        adminLayout.classList.add('hidden');
+        currentRoleBadge.textContent = '학생 화면';
+        heroDesc.textContent = '학생은 자신이 제출한 민원만 확인할 수 있고, 관리자는 전체 민원을 관리할 수 있는 시스템';
+        studentCompleteBox.classList.add('hidden');
+        renderStudentSubmittedList();
+      } else {
+        adminLayout.classList.remove('hidden');
+        studentLayout.classList.add('hidden');
+        currentRoleBadge.textContent = '관리자 화면';
+        heroDesc.textContent = '학생이 제출한 편지를 확인하고 상태를 관리하는 관리자 전용 화면';
+        renderList();
+      }
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedCategory = chip.dataset.value;
+      });
+    });
+
+    writerType.addEventListener('change', () => {
+      if (writerType.value === '익명') {
+        privateOnly.checked = false;
+        writerName.placeholder = '익명이면 비워도 됩니다';
+      } else {
+        writerName.placeholder = '실명이면 이름을 입력할 수 있습니다';
+      }
+    });
+
+    studentEntryBtn.addEventListener('click', () => enterApp('student'));
+    adminEntryBtn.addEventListener('click', () => {
+      roleScreen.classList.add('hidden');
+      adminPasswordScreen.classList.remove('hidden');
+      adminPasswordInput.value = '';
+      passwordError.textContent = '';
+      setTimeout(() => adminPasswordInput.focus(), 50);
+    });
+
+    backToRoleBtn.addEventListener('click', () => {
+      adminPasswordScreen.classList.add('hidden');
+      roleScreen.classList.remove('hidden');
+      passwordError.textContent = '';
+    });
+
+    adminLoginBtn.addEventListener('click', tryAdminLogin);
+    adminPasswordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryAdminLogin();
+    });
+
+    changeRoleBtn.addEventListener('click', () => {
+      currentRole = null;
+      appScreen.classList.add('hidden');
+      adminLayout.classList.add('hidden');
+      studentLayout.classList.add('hidden');
+      adminPasswordScreen.classList.add('hidden');
+      roleScreen.classList.remove('hidden');
+      studentCompleteBox.classList.add('hidden');
+    });
+
+    refreshBtn.addEventListener('click', () => {
+      if (currentRole === 'admin') renderList();
+      if (currentRole === 'student') renderStudentSubmittedList();
+    });
+
+    saveBtn.addEventListener('click', submitLetter);
+
+    sampleBtn.addEventListener('click', () => {
+      writerType.value = '실명';
+      writerName.value = '홍길동';
+      importance.value = '긴급';
+      statusEl.value = '제출 시 자동으로 접수됨 처리';
+      privateOnly.checked = true;
+      selectedCategory = '교실 분위기';
+      chips.forEach(c => c.classList.toggle('active', c.dataset.value === selectedCategory));
+      writerName.placeholder = '실명이면 이름을 입력할 수 있습니다';
+      subject.value = '쉬는 시간 소음이 너무 커요';
+      content.value = '쉬는 시간에 일부 학생들이 크게 떠들어서 다음 수업 준비가 어려울 때가 있습니다. 친구들이 조금만 더 조용히 준비할 수 있도록 반에서 규칙을 다시 안내해 주면 좋겠습니다.';
+      studentCompleteBox.classList.add('hidden');
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearForm();
+      studentCompleteBox.classList.add('hidden');
+    });
+
+    filterCategory.addEventListener('change', renderList);
+    filterStatus.addEventListener('change', renderList);
+
+    window.updateStatus = updateStatus;
+    window.deleteLetter = deleteLetter;
+
+    studentId = getStudentId();
+    clearForm();
+    hideSetupMessage();
+    initFirebase();
+  </script>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -502,6 +1787,16 @@
       font-weight: 800;
     }
 
+    .delete-btn {
+      background: #fff1f3;
+      color: #ce4257;
+      border: 1.5px solid #f3b3bc;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .admin-label {
       font-size: 12px;
       font-weight: 800;
@@ -790,6 +2085,7 @@
       onSnapshot,
       doc,
       updateDoc,
+      deleteDoc,
       serverTimestamp
     } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
@@ -1043,6 +2339,7 @@
               <span class="admin-label">관리자 상태 변경</span>
               <button class="admin-btn" onclick="window.updateStatus('${item.id}', '확인 중')">확인됨</button>
               <button class="admin-btn" onclick="window.updateStatus('${item.id}', '해결됨')">해결됨</button>
+              <button class="delete-btn" onclick="window.deleteLetter('${item.id}')">삭제</button>
             </div>
           </div>
         </div>
@@ -1133,6 +2430,20 @@
       } catch (error) {
         console.error(error);
         alert('상태 변경에 실패했습니다.');
+      }
+    }
+
+    async function deleteLetter(id) {
+      if (currentRole !== 'admin' || !db) return;
+
+      const confirmed = confirm('이 민원을 삭제하시겠습니까? 삭제 후에는 되돌릴 수 없습니다.');
+      if (!confirmed) return;
+
+      try {
+        await deleteDoc(doc(db, LETTERS_COLLECTION, id));
+      } catch (error) {
+        console.error(error);
+        alert('민원 삭제에 실패했습니다.');
       }
     }
 
@@ -1248,6 +2559,7 @@
     filterStatus.addEventListener('change', renderList);
 
     window.updateStatus = updateStatus;
+    window.deleteLetter = deleteLetter;
 
     studentId = getStudentId();
     clearForm();
