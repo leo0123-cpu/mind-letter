@@ -1245,8 +1245,7 @@
     });
 
     refreshBtn.addEventListener('click', () => {
-      if (currentRole === 'admin') renderList();
-      if (currentRole === 'student') renderStudentSubmittedList();
+      location.reload();
     });
 
     saveBtn.addEventListener('click', submitLetter);
